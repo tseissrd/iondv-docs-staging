@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71377fb5-feb9-41dc-8732-295bd1a20304" name="Default Changelist" comment="" />
+    <list default="true" id="71377fb5-feb9-41dc-8732-295bd1a20304" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ProjectId" id="1XKR2GxtdVJMwkvYGu4UfZBUdTT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -16,7 +19,14 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/4_ion_model" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\workspace\staging-sphinx-docs\4_ion_model" />
+      <recent name="C:\workspace\staging-sphinx-docs\3_modules_description" />
+      <recent name="C:\workspace\staging-sphinx-docs\2_system_description" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -43,5 +53,9 @@
       <screen x="0" y="0" width="2560" height="1040" />
     </state>
     <state x="1600" y="252" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.2560.1040@0.0.2560.1040" timestamp="1580793184682" />
+    <state x="1627" y="279" width="586" height="488" key="find.popup" timestamp="1580798264275">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state x="1627" y="279" width="586" height="488" key="find.popup/0.0.2560.1040@0.0.2560.1040" timestamp="1580798264275" />
   </component>
 </project>
