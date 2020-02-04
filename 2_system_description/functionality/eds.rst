@@ -69,7 +69,7 @@
 Пример
 ^^^^^^
 
-.. code-block::js
+.. code-block::
 
    "modules": {
        "registry": {
@@ -84,7 +84,7 @@
 Пример
 ^^^^^^
 
-.. code-block::js
+.. code-block::
 
     {
          "name": "needAppTrs_sign",

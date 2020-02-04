@@ -106,7 +106,7 @@
 
 В приведенном примере в главном файле утилиты ``lib/actions/createPlanIndicatorsHandler.js`` должен быть экспорт последней строкой:
 
-.. code-block::js
+.. code-block::
 
    module.exports = CreatePlanIndicatorsHandler;
 
@@ -117,7 +117,7 @@
 
 Для примера нужно сначала для утилиты добавить элемент интерфейса в представлении, который будет запускать утилиту. Для этого в файле ``views/indicatorFinancial/item.json`` нужно добавить кнопку ``CREATE_INDICATOR_VALUE``\ :
 
-.. code-block::js
+.. code-block::
 
    {
          "id": "CREATE_INDICATOR_VALUE",
@@ -132,7 +132,7 @@
 
 Затем нужно добавить настройки в ``deploy``\ , чтобы связать кнопку в интерфейсе ``CREATE_INDICATOR_VALUE`` и утилиту ``createIndicatorValueHandler``\ :
 
-.. code-block::js
+.. code-block::
 
    "modules": {
        "registry": {

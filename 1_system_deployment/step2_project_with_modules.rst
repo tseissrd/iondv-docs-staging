@@ -28,7 +28,7 @@
 #. 
    Открываем файл ``package.json`` в котором смотрим зависимости.
 
-.. code-block::js
+.. code-block::
 
     "engines": {
        "ion": "3.0.0"
@@ -126,7 +126,7 @@
 #. 
    Открываем файл в редакторе и вставляем содержимое. 
 
-.. code-block::js
+.. code-block::
 
    auth.denyTop=false 
    auth.registration=false 
