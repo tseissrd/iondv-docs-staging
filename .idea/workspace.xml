@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71377fb5-feb9-41dc-8732-295bd1a20304" name="Default Changelist" comment="" />
+    <list default="true" id="71377fb5-feb9-41dc-8732-295bd1a20304" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_system_deployment/step2_project_with_modules.rst" beforeDir="false" afterPath="$PROJECT_DIR$/1_system_deployment/step2_project_with_modules.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_system_description/functionality/eds.rst" beforeDir="false" afterPath="$PROJECT_DIR$/2_system_description/functionality/eds.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_system_description/functionality/filter.rst" beforeDir="false" afterPath="$PROJECT_DIR$/2_system_description/functionality/filter.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_system_description/functionality/module_templates.rst" beforeDir="false" afterPath="$PROJECT_DIR$/2_system_description/functionality/module_templates.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_system_description/functionality/printed_forms.rst" beforeDir="false" afterPath="$PROJECT_DIR$/2_system_description/functionality/printed_forms.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_system_description/functionality/utilities.rst" beforeDir="false" afterPath="$PROJECT_DIR$/2_system_description/functionality/utilities.rst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +43,7 @@
       <workItem from="1580792592938" duration="33000" />
       <workItem from="1580792659365" duration="528000" />
       <workItem from="1580793204411" duration="149000" />
-      <workItem from="1580793388034" duration="2567000" />
+      <workItem from="1580793388034" duration="1971000" />
     </task>
     <servers />
   </component>
