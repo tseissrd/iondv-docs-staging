@@ -25,19 +25,19 @@
 
 вид: 
 
-.. code-block::
+.. code-block::js
 
    ${table_col:коллекция:разделитель:формат}
 
 пример:
 
-.. code-block::
+.. code-block::js
 
    ${table_col:list.instructions.limit:;:DD.MM.YYYY}
 
 результат:
 
-.. code-block::
+.. code-block::js
 
    30.08.2017;06.09.2017
 
@@ -51,7 +51,7 @@
 Пример:
 ^^^^^^^
 
-.. code-block::
+.. code-block::js
 
    {costing.costExp | toWords:true}
 
@@ -83,7 +83,7 @@
 Значение текущей даты ``_now``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block::
+.. code-block::js
 
    {_now} г.
 
@@ -92,13 +92,13 @@
 
 Если необходимо отобразить поля из массива объектов (коллекция например) используется тэг:
 
-.. code-block::
+.. code-block::js
 
    ${table_col:list.collection.attrFromCollection}
 
 По умолчанию значения будут объеденины через точку с запятой. Чтобы указать другой разделитель, укажите его после второго двоеточия:
 
-.. code-block::
+.. code-block::js
 
    ${table_col:list.collection.attrFromCollection:разделитель}
 

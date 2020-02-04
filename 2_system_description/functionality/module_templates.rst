@@ -16,7 +16,7 @@
 
 Тема оформления - директория следующей структуры:
 
-.. code-block::
+.. code-block::js
 
    /static/css     директория стилей
    /static/js        директория скриптов
@@ -57,7 +57,7 @@
 Пример в dnt
 ^^^^^^^^^^^^
 
-.. code-block::
+.. code-block::js
 
    "geomap": {
          "globals": {
