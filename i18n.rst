@@ -1,0 +1,394 @@
+
+варианты i18n
+=============
+
+I. `gettext.js <https://github.com/guillaumepotier/gettext.js>`_
+----------------------------------------------------------------
+
+Самая легковесная библиотека, автор заявляет соответствие стандартному gettext.
+
+1) установка:
+
+``npm install gettext.js --save``
+
+2) библиотека подключается к приложению:
+
+.. code-block:: js
+
+  const i18n = require('gettext.js');
+
+3) в формате JSON загружаются локали:
+
+.. code-block:: js
+
+  i18n.setMessages(<домен>, <локаль>, <массив ключей и сообщений>, <настройки для форм множественных чисел>);
+
+пример (для bin/www):
+
+.. code-block:: js
+
+  i18n.setMessages('messages', 'en', {
+      'Запуск заданий по расписанию': 'Loading scheduled tasks',
+      'Подсистема заданий по расписанию запущена': 'Scheduled tasks subsystem has started'
+    }, 'nplurals=2; plural=n>1;');
+
+4) сообщения (литералы?), которые необходимо перевести, упаковываются методами ``gettext`` или ``ngettext`` (для множественных форм) из библиотеки:
+
+.. code-block:: js
+
+  sysLog.info(i18n.gettext('Запуск заданий по расписанию'));
+
+5) методами DOM или js выбирается требуемая в данный момент локаль:
+
+.. code-block:: text
+
+  i18n.setLocale('en'); // js
+  <html lang="en"> // DOM
+
+6) тест на примере bin/www и результат:
+
+.. code-block:: js
+
+  #!/usr/bin/env node
+  /* eslint no-process-exit:off, no-sync:off */
+  'use strict';
+  const config = require('../config');
+  const IonLogger = require('core/impl/log/IonLogger');
+  const Scheduler = require('core/impl/Scheduler');
+  const sysLog = new IonLogger(config.log || {});
+  const server = require('lib/server');
+  const i18n = require('gettext.js'); // ************
+
+  server({
+    config,
+    sysLog,
+    onStart: (scope) => {
+      i18n.setLocale('en'); // ************
+      i18n.setMessages('messages', 'en', { // ************
+        'Запуск заданий по расписанию': 'Loading scheduled tasks', // ************
+        'Подсистема заданий по расписанию запущена': 'Scheduled tasks subsystem has started' // ************
+      }, 'nplurals=2; plural=n>1;');  // ************
+      if (config.runJobs) {
+        sysLog.info(i18n.gettext('Запуск заданий по расписанию')); // ************
+        return scope.scheduler.start().then(() => {
+          sysLog.info(i18n.gettext('Подсистема заданий по расписанию запущена')); // ************
+        });
+      }
+    }
+  });
+
+.. code-block:: text
+
+  28.02 15:44 INFO  Все модули загружены.
+  28.02 15:44 INFO  Слушается порт 8888
+  28.02 15:44 INFO  Loading scheduled tasks
+  28.02 15:44 INFO  Scheduled tasks subsystem has started
+
+Можно осуществлять перевод во фронтэнде:
+
+.. code-block:: html
+
+    <script src="/path/to/gettext.js" type="text/javascript"></script>
+    <script>
+        var i18n = window.i18n(options);
+        i18n.gettext('foo');
+    </script>
+
+Есть возможности форматированного перевода с подстановкой значений переменных:
+
+.. code-block:: js
+
+    gettext('There are %1 in the %2', 'apples', 'bowl'); //-> "There are apples in the bowl
+    ngettext('One %2', '%1 %2', 10, 'bananas'); //-> "10 bananas"
+
+II. `jed <https://messageformat.github.io/Jed/>`_
+-------------------------------------------------
+
+1. установка:
+
+``npm install jed``
+
+2. подключение библиотеки:
+
+.. code-block:: js
+
+    var Jed = require('jed');
+
+Поддерживается большинство стандартных методов gettext, также вводится обертка с возможностью чейнинга методов.
+
+3. создается объект (обычно locale_data формируется po2json конвертером):
+
+.. code-block:: js
+
+    var i18n = new Jed({
+      "locale_data" : {
+        "messages" : {
+          "" : {
+            "domain" : "messages",
+            "lang" : "en",
+            "plural_forms" : "nplurals=2; plural=(n != 1);"
+          },
+          'Запуск заданий по расписанию' : ['Loading scheduled tasks'],
+          'Подсистема заданий по расписанию запущена': ['Scheduled tasks subsystem has started']
+        }
+      }
+    });
+
+4.  сообщения оборачиваются методами api:
+
+.. code-block:: js
+
+    sysLog.info(i18n.translate('Запуск заданий по расписанию')
+            .fetch());
+    sysLog.info(i18n.translate('Подсистема заданий по расписанию запущена')
+            .fetch());
+
+Сообщения передаются по чейну объектами пока не будет вызван ``fetch()``.
+
+5.  Пример bin/www:
+
+.. code-block:: js
+
+    #!/usr/bin/env node
+    /* eslint no-process-exit:off, no-sync:off */
+    'use strict';
+    const config = require('../config');
+    const IonLogger = require('core/impl/log/IonLogger');
+    const Scheduler = require('core/impl/Scheduler');
+    const sysLog = new IonLogger(config.log || {});
+    const server = require('lib/server');
+    var Jed = require('jed');
+
+    server({
+      config,
+      sysLog,
+      onStart: (scope) => {
+        var i18n = new Jed({
+          "locale_data" : {
+            "messages" : {
+              "" : {
+                "domain" : "messages",
+                "lang" : "en",
+                "plural_forms" : "nplurals=2; plural=(n != 1);"
+              },
+              'Запуск заданий по расписанию' : ['Loading scheduled tasks'],
+              'Подсистема заданий по расписанию запущена': ['Scheduled tasks subsystem has started']
+            }
+          }
+        });
+        if (config.runJobs) {
+          sysLog.info(i18n.translate('Запуск заданий по расписанию')
+            .fetch());
+          return scope.scheduler.start().then(() => {
+            sysLog.info(i18n.translate('Подсистема заданий по расписанию запущена')
+              .fetch());
+          });
+        }
+      }
+    });
+
+.. code-block:: text
+
+    28.02 17:11 INFO  Все модули загружены.
+    28.02 17:11 INFO  Слушается порт 8888
+    28.02 17:11 INFO  Loading scheduled tasks
+    28.02 17:11 INFO  Scheduled tasks subsystem has started
+
+III. `i18next <https://www.i18next.com/>`_
+------------------------------------------
+
+С помощью пользовательских плагинов поддерживается интеграция с React, AngularJS, Vue.js и другими фреймворками.
+
+ПО УМОЛЧАНИЮ КЛЮЧИ НЕ ДОЛЖНЫ БЫТЬ ИСХОДНЫМ ТЕКСТОМ (нельзя использовать саму строку-ключ как вариант при отсутствии перевода, а также не поддерживаются некоторые символы).
+
+-- есть `другой вариант конфигурации <https://www.i18next.com/principles/fallback#key-fallback>`_
+
+Api содержит `большое количество функций <https://www.i18next.com/overview/api>`_, встроено асинхронное выполнение.
+
+1. установка:
+
+``npm install i18next --save``
+
+2. подключение библиотеки:
+
+.. code-block:: js
+
+    import i18next from 'i18next'; // i18next = require('i18next');
+
+3. выполняется инициализация:
+
+.. code-block:: js
+
+    i18next.init({
+      lng: 'en',
+      debug: true,
+      resources: {
+        en: {
+          translation: {
+            "Запуск заданий по расписанию": "Loading scheduled tasks",
+            "Подсистема заданий по расписанию запущена": "Scheduled tasks subsystem has started"
+          }
+        }
+      }
+    });
+
+4.  сообщения оборачиваются методами:
+
+.. code-block:: js
+
+    sysLog.info(i18next.t('Запуск заданий по расписанию'));
+    sysLog.info(i18next.t('Подсистема заданий по расписанию запущена'));
+
+5.  Пример bin/www:
+
+.. code-block:: js
+
+    #!/usr/bin/env node
+    /* eslint no-process-exit:off, no-sync:off */
+    'use strict';
+    const config = require('../config');
+    const IonLogger = require('core/impl/log/IonLogger');
+    const Scheduler = require('core/impl/Scheduler');
+    const sysLog = new IonLogger(config.log || {});
+    const server = require('lib/server');
+    const i18next = require('i18next');
+
+    server({
+      config,
+      sysLog,
+      onStart: (scope) => {
+        i18next.init({
+          lng: 'en',
+          resources: {
+            en: {
+              translation: {
+                "Запуск заданий по расписанию": "Loading scheduled tasks",
+                "Подсистема заданий по расписанию запущена": "Scheduled tasks subsystem has started"
+              }
+            }
+          }
+        });
+        if (config.runJobs) {
+          sysLog.info(i18next.t('Запуск заданий по расписанию'));
+          return scope.scheduler.start().then(() => {
+            sysLog.info(i18next.t('Подсистема заданий по расписанию запущена'));
+          });
+        }
+      }
+    });
+
+.. code-block:: text
+
+    28.02 17:55 INFO  Все модули загружены.
+    28.02 17:55 INFO  Слушается порт 8888
+    28.02 17:55 INFO  Loading scheduled tasks
+    28.02 17:55 INFO  Scheduled tasks subsystem has started
+
+Извлечение строк из кода для i18next
+------------------------------------
+
+`i18next-parser <https://github.com/i18next/i18next-parser>`_
+
+1. npm install -g i18next-parser
+
+2. создаем в папке фреймворка (по умолчанию, можно передать путь через параметры) ``i18next-parser.config.js`` содержания:
+
+.. code-block:: js
+
+    // i18next-parser.config.js
+
+    module.exports = {
+      contextSeparator: '_',
+      // Key separator used in your translation keys
+
+      createOldCatalogs: true,
+      // Save the \_old files
+
+      defaultNamespace: 'translation',
+      // Default namespace used in your i18next config
+
+      defaultValue: '',
+      // Default value to give to empty keys
+
+      indentation: 2,
+      // Indentation of the catalog files
+
+      keepRemoved: false,
+      // Keep keys from the catalog that are no longer in code
+
+      keySeparator: '.',
+      // Key separator used in your translation keys
+      // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
+
+      // see below for more details
+      lexers: {
+        hbs: ['HandlebarsLexer'],
+        handlebars: ['HandlebarsLexer'],
+
+        htm: ['HTMLLexer'],
+        html: ['HTMLLexer'],
+
+        mjs: ['JavascriptLexer'],
+        js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
+        ts: ['JavascriptLexer'],
+        jsx: ['JsxLexer'],
+        tsx: ['JsxLexer'],
+
+        default: ['JavascriptLexer']
+      },
+
+      lineEnding: 'auto',
+      // Control the line ending. See options at https://github.com/ryanve/eol
+
+      locales: ['en', 'fr'],
+      // An array of the locales in your applications
+
+      namespaceSeparator: ':',
+      // Namespace separator used in your translation keys
+      // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
+
+      output: 'locales/$LOCALE/$NAMESPACE.yml',
+      // Supports $LOCALE and $NAMESPACE injection
+      // Supports JSON (.json) and YAML (.yml) file formats
+      // Where to write the locale files relative to process.cwd()
+
+      input: undefined,
+      // An array of globs that describe where to look for source files
+      // relative to the location of the configuration file
+
+      reactNamespace: false,
+      // For react file, extract the defaultNamespace - https://react.i18next.com/components/translate-hoc.html
+      // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
+
+      sort: false,
+      // Whether or not to sort the catalog
+
+      useKeysAsDefaultValue: true,
+      // Whether to use the keys as the default value; ex. "Hello": "Hello", "World": "World"
+      // The option `defaultValue` will not work if this is set to true
+
+      verbose: false
+      // Display info about the parsing including some stats
+    }
+
+3. достаем строки, обернутые в t(...)
+
+.. code-block:: text
+
+    i18next bin/www
+
+4. aptitude install translate-toolkit
+
+5. конвертим в portable object template
+
+конвертер json2po не распознает строки с русскими буквами как ключ - пихает в контекст, поэтому предлагаю yaml2po.
+
+.. code-block:: text
+
+    yaml2po -P locales/en/translation.yml > test.pot
+
+6. разделяем по локалям на ``.po`` любым методом (sphinx-intl update)
+
+7. переводим любым методом (weblate, poedit...)
+
+8. TODO
