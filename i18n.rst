@@ -381,7 +381,7 @@ Api содержит `большое количество функций <https:
 
 5. конвертим в portable object template
 
-конвертер json2po не распознает строки с русскими буквами как ключ - пихает в контекст, поэтому предлагаю yaml2po.
+конвертер json2po не распознает строки с русскими буквами как ключ - кладет в контекст, поэтому предлагаю yaml2po.
 
 .. code-block:: text
 
@@ -389,6 +389,53 @@ Api содержит `большое количество функций <https:
 
 6. разделяем по локалям на ``.po`` любым методом (sphinx-intl update)
 
+(6.1. мерж нового файла с переведенным, если разделение на локали было не через сфинкс апдейт)
+
 7. переводим любым методом (weblate, poedit...)
 
-8. TODO
+8. конвертим переведенный ``.po`` в ``.yml``
+
+po2yaml -i test.po -t locales\en\translation.yml > test.yml
+
+9. считываем yml, подставляем как ``resources.en.translation`` в приложении:
+
+.. code-block:: js
+
+    #!/usr/bin/env node
+    /* eslint no-process-exit:off, no-sync:off */
+    'use strict';
+    const config = require('../config');
+    const IonLogger = require('core/impl/log/IonLogger');
+    const Scheduler = require('core/impl/Scheduler');
+    const sysLog = new IonLogger(config.log || {});
+    const server = require('lib/server');
+    const i18next = require('i18next');
+    const yaml = require('js-yaml');
+    const fs = require('fs');
+
+    server({
+      config,
+      sysLog,
+      onStart: (scope) => {
+        var doc;
+        try {
+          doc = yaml.safeLoad(fs.readFileSync('test.yml', 'utf8'));
+        } catch (e) {
+          console.error(e);
+        }
+        i18next.init({
+          lng: 'en',
+          resources: {
+            en: {
+              translation: doc
+            }
+          }
+        });
+        if (config.runJobs) {
+          sysLog.info(i18next.t('Запуск заданий по расписанию'));
+          return scope.scheduler.start().then(() => {
+            sysLog.info(i18next.t('Подсистема заданий по расписанию запущена'));
+          });
+        }
+      }
+    });
